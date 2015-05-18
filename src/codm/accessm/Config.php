@@ -16,6 +16,9 @@ class Config {
             'dsn'   => 'mysql:localhost;dbname=accessm',
             'user'  => 'webdev',
             'pass'  => ''
+        ],
+        'log'   => [
+            'file'  => '/var/www/__pm/accessm/accessm.log'
         ]
     ];
 

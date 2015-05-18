@@ -8,14 +8,29 @@
 
     require __DIR__.'/../../../vendor/autoload.php';
 
+
     $cfgDB = config()->db;
+    $cfgLogFile = config()->log['file'];
+
+
+    use Monolog\Logger;
+    use Monolog\Handler\StreamHandler;
+
+    $log = new Logger('accessm');
+    $log->pushHandler(new StreamHandler($cfgLogFile, Logger::WARNING));
+
 
     try {
+
         $dbh = new PDO($cfgDB['dsn'], $cfgDB['user'], $cfgDB['pass']);
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
     } catch (PDOException $e) {
-        //TODO: monolog cant connect DB
+
+        $log->addError($e->getMessage());
         print "Error!: " . $e->getMessage() . "<br/>";
         die();
+
     }
 
 

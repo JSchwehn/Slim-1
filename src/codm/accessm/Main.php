@@ -27,8 +27,7 @@
 
     } catch (PDOException $e) {
 
-        $log->addError($e->getMessage());
-        print "Error!: " . $e->getMessage() . "<br/>";
+        $log->addError($e->getMessage(), $cfgDB);
         die();
 
     }

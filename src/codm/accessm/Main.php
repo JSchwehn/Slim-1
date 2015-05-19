@@ -12,12 +12,8 @@
     $cfgDB = config()->db;
     $cfgLogFile = config()->log['file'];
 
-
-    use Monolog\Logger;
-    use Monolog\Handler\StreamHandler;
-
-    $log = new Logger('accessm');
-    $log->pushHandler(new StreamHandler($cfgLogFile, Logger::WARNING));
+    $log = new Monolog\Logger('accessm');
+    $log->pushHandler(new Monolog\Handler\StreamHandler($cfgLogFile, Monolog\Logger::WARNING));
 
 
     try {

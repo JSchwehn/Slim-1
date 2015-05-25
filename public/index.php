@@ -6,4 +6,11 @@
  * Time: 19:15
  */
 
-    require __DIR__.'/../src/codm/accessm/Main.php';
+
+    require __DIR__ . '/../vendor/autoload.php';
+
+    $app = new codm\accessm\App();
+
+
+
+

@@ -8,23 +8,37 @@
 
 namespace codm\accessm;
 
+use Monolog\Logger;
 
 class Config {
 
     protected $values = [
         'db'    => [
-            'dsn'   => 'mysql:localhost;dbname=accessm',
-            'user'  => 'webdev',
-            'pass'  => ''
+            'dsn'       => 'mysql:localhost;dbname=accessm',
+            'user'      => 'webdev',
+            'pass'      => ''
         ],
         'log'   => [
-            'file'  => '/var/www/__pm/accessm/accessm.log'
+            [
+                'level'     => Logger::INFO,
+                'handler'   => 'Monolog\Handler\StreamHandler',
+                'stream'    => '/var/www/accessm/accessm.log'
+            ],
+            [
+                'level'     => Logger::WARNING,
+                'handler'   => 'Monolog\Handler\StreamHandler',
+                'stream'    => 'php://output'
+            ]
         ]
     ];
 
     private static $instance = null;
 
     private function __construct( array $dataOverride = [] ) {
+
+        $this->values['app_root'] = realpath(__DIR__.'/../../../').'/';
+        $this->values['web_root'] = $this->values['app_root'].'public/';
+
         $this->values = array_merge($this->values, $dataOverride);
     }
 

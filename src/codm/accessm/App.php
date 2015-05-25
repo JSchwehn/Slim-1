@@ -3,67 +3,48 @@
 
     namespace codm\accessm;
 
-    use Monolog\Logger;
 
-    class App extends \Klein\App {
+    class App extends \Silex\Application {
 
-        public function __construct(){
+        public function __construct(array $values = []){
 
-            //register the config
-            $this->register('config', function(){
-                return Config::getInstance();
-            });
+            parent::__construct($values);
 
-            $this->register('log', function(){
+            //register Sliec Controller Service Provider
+            $this->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
-                $myLog = new Logger('accessm');
-
-                //register all handlers from config
-                if(is_array($this->config->log) AND count($this->config->log)){
-
-                    foreach($this->config->log AS $elem){
-
-                        if(!empty($elem['stream']) AND !empty($elem['handler'])){
-                            //TODO: Catch Monolog Exceptions
-                            $myLog->pushHandler(new $elem['handler'](
-                                    $elem['stream'],
-                                    (!empty($elem['level'])) ? $elem['level'] : Logger::WARNING)
-                            );
-                        }
-                    }
-                }
-
-                return $myLog;
-
-            });
-
-            //register database connection
-            $this->register('db', function() {
-
-                $db_cfg = $this->config->db;
-
-                //TODO: check if config values for DB are present
-                try {
-
-                    $myDB = new \PDO($db_cfg['dsn'], $db_cfg['user'], $db_cfg['pass'], [
-                        \PDO::ATTR_ERRMODE               => \PDO::ERRMODE_EXCEPTION,
-                        \PDO::ATTR_DEFAULT_FETCH_MODE    => \PDO::FETCH_ASSOC
-                    ]);
-
-                    $this->log->addInfo('registered database connection: ', [$db_cfg['dsn']]);
-
-                    return $myDB;
-
-                } catch (\PDOException $e) {
-                    $this->log->addError($e->getMessage(), $db_cfg);
-                    return false;
-                }
-
-            });
+            $this->register(new \Igorw\Silex\ConfigServiceProvider(__DIR__ . "/config.json"));
 
 
+            //TODO: make it flexible for more than one log
+            $this->register(new \Silex\Provider\MonologServiceProvider(), [
+                    'monolog.logfile' => $this['config']['logfile']
+                ]
+            );
 
-            $this->log->addInfo('init app done');
+            if (
+                empty($this['config']['db']['dsn']) OR
+                empty($this['config']['db']['user']) OR
+                !isset($this['config']['db']['pass'])
+            ) {
+                $this['monolog']->addCritical('database configuration incomplete');
+                throw new \Exception('database configuration incomplete');
+            }
+
+            $this->register(
+                new \Herrera\Pdo\PdoServiceProvider(),
+                array(
+                    'pdo.dsn' => $this['config']['db']['dsn'],
+                    'pdo.username' => $this['config']['db']['user'],
+                    'pdo.password' => $this['config']['db']['pass'],
+                    'pdo.options' => [
+                        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+                    ]
+                )
+            );
+
+            $this['monolog']->addInfo('init app done');
 
         }
 

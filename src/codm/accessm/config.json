@@ -1,0 +1,10 @@
+{
+    "config" : {
+        "db": {
+            "dsn": "mysql:localhost;dbname=accessm",
+            "user": "webdev",
+            "pass": ""
+        },
+        "logfile": "/var/www/accessm/accessm.log"
+    }
+}

@@ -8,8 +8,6 @@
 
 namespace codm\accessm;
 
-use Monolog\Logger;
-
 class Config {
 
     protected $values = [

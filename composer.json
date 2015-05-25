@@ -5,7 +5,9 @@
         }
     },
     "require": {
+        "silex/silex": "^1.2",
+        "herrera-io/silex-pdo": "1.*",
         "monolog/monolog": "^1.13",
-        "klein/klein": "^2.1"
+        "igorw/config-service-provider": "^1.2"
     }
 }

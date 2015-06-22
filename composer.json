@@ -1,13 +1,18 @@
 {
-    "name": "slim/slim-skeleton",
+    "name": "codm/Slim",
     "description": "A Slim Framework skeleton application for rapid development",
     "keywords": ["microframework","rest","router"],
     "license": "MIT",
     "authors": [
         {
             "name": "Patrik Mayer",
-            "email": "info@codm.de",
+            "email": "patrik.mayer@codm.de",
             "homepage": "https://www.codm.de/"
+        },
+        {
+            "name": "Jens Schwehn",
+            "email": "jschwehn@gmail.com",
+            "homepage": "http://www.ldk.net/"
         }
     ],
     "require": {

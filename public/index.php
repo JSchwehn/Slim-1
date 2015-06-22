@@ -2,7 +2,7 @@
 
 require '../vendor/autoload.php';
 
-$config = require(__DIR__.'/../config/config.php');
+$config = require(__DIR__ . '/../config/config.dist.php');
 
 // Prepare app
 try {

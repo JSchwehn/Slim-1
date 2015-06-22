@@ -1,37 +1,49 @@
 <?php
+
 require '../vendor/autoload.php';
 
+$config = require(__DIR__.'/../config/config.php');
+
 // Prepare app
-$app = new \Slim\Slim(array(
-    'templates.path' => '../templates',
-));
+try {
 
-// Create monolog logger and store logger in container as singleton 
-// (Singleton resources retrieve the same log resource definition each time)
-$app->container->singleton('log', function () {
-    $log = new \Monolog\Logger('slim-skeleton');
-    $log->pushHandler(new \Monolog\Handler\StreamHandler('../logs/app.log', \Monolog\Logger::DEBUG));
-    return $log;
-});
+    $app = new \codm\Slim\Core($config);
 
-// Prepare view
-$app->view(new \Slim\Views\Twig());
-$app->view->parserOptions = array(
-    'charset' => 'utf-8',
-    'cache' => realpath('../templates/cache'),
-    'auto_reload' => true,
-    'strict_variables' => false,
-    'autoescape' => true
-);
-$app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
-// Define routes
-$app->get('/', function () use ($app) {
-    // Sample log message
-    $app->log->info("Slim-Skeleton '/' route");
-    // Render index view
-    $app->render('index.html');
-});
 
-// Run app
-$app->run();
+    /*
+    // Prepare view
+    $app->view(new \Slim\Views\Twig());
+    $app->view->parserOptions = array(
+        'charset' => 'utf-8',
+        'cache' => realpath('../templates/cache'),
+        'auto_reload' => true,
+        'strict_variables' => false,
+        'autoescape' => true
+    );
+    $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
+    */
+
+
+
+    $routers = glob('../routers/*.router.php');
+    foreach ($routers as $router) {
+        require $router;
+    }
+
+
+    // Run app
+    $app->run();
+
+
+
+} catch (\Exception $e) {
+
+    //debug only
+    die($e->getMessage());
+
+    die('show stopper, check log file!');
+
+}
+
+

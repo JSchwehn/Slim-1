@@ -5,4 +5,4 @@ templates/cache/*
 .AppleDouble
 composer.lock
 config/config.php
-
+.idea*

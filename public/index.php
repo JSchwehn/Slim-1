@@ -2,13 +2,12 @@
 
 require '../vendor/autoload.php';
 
-$config = require(__DIR__ . '/../config/config.dist.php');
+$config = require(__DIR__ . '/../config/config.php');
 
 // Prepare app
 try {
 
     $app = new \codm\Slim\Core($config);
-
 
 
     /*
